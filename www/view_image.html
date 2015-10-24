@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<img class="image1" src="">
+	<img class="image2" src="">
+	<img class="image3" src="">
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript">
+		if(localStorage.getItem("report_image")) {
+			var report_image = localStorage.getItem("report_image");
+			report_image = report_image.split(',');
+
+			$(".image1").attr("src", "http://sosemergency2014.16mb.com/uploads/"+report_image[0]);
+			$(".image2").attr("src", "http://sosemergency2014.16mb.com/uploads/"+report_image[1]);
+			$(".image3").attr("src", "http://sosemergency2014.16mb.com/uploads/"+report_image[2]);
+		}
+	</script>
+</body>
+</html>

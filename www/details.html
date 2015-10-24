@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">  
+
+	<style>
+		@-ms-viewport { width: 100vw ; zoom: 100% ; }                              
+		@viewport { width: 100vw ; zoom: 100% ; }
+		@-ms-viewport { user-zoom: fixed ; }                                    
+		@viewport { user-zoom: fixed ; width: }
+		.btn-primary{
+	        background-color: #CF000F;
+	    }
+	    .btn-primary:hover{
+	        background-color: #CF000F;
+	    }
+	    .btn-primary:focus{
+	        background-color: #CF000F;
+	    }
+	    .form-control:focus{
+	        border-color: #CF000F;
+	    }
+	    .inner-addon { 
+	        position: relative; 
+	    }
+
+	    .inner-addon .glyphicon {
+	        position: absolute;
+	        padding: 10px;
+	        pointer-events: none;
+	    }
+	    .left-addon .glyphicon  { left:  0px;}
+	    .right-addon .glyphicon { right: 0px;}
+	    .left-addon input  { padding-left:  30px; }
+	    .right-addon input { padding-right: 30px; }
+	    .container{
+	    	text-align: center;
+	    	margin-top: 37%;
+	    }
+	</style>
+	<script src="https://cdn.rawgit.com/ftlabs/fastclick/master/lib/fastclick.js"></script>
+	<link rel="stylesheet" href="css/app.css">
+	<link rel="stylesheet" type="text/css" href="css/flat-ui.css">
+	<link rel="stylesheet" type="text/css" href="css/flat-ui.min.css">
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+</head>
+<body id="bodycolor">
+    <div class="container">
+    	<h6 style="font-size: 50px; color: white;" >Code</h6><p style="font-size: 50px; color: white;" id = "ec_color_name"></p>
+	    <h6 id = "pu_name" style="font-size: 45px; color: white;"></h6>
+        <p style="color: white">---------------</p>
+        <h6 id="pu_gender" style="color: white;"></h6>
+        <h6 id="pu_contact_number" style=" color: white;"></h6>
+		<a href="navigate.html" class="btn btn-primary btn-block">Navigate</a>
+		<a href="#" id="respond" class="btn btn-primary btn-block">Respond</a>
+    </div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			if(localStorage.getItem("report_image")) {
+				$(".container").append("<a href='view_image.html'>View Pictures</a>");
+			}
+
+			document.getElementById("pu_name").innerHTML = localStorage.getItem("pu_name");
+			document.getElementById("pu_gender").innerHTML = localStorage.getItem("pu_gender");
+			document.getElementById("pu_contact_number").innerHTML = localStorage.getItem("pu_contact_number");
+			document.getElementById("ec_color_name").innerHTML = localStorage.getItem("ec_color_name");
+			var color_hex = localStorage.getItem("ec_color_hex");
+			$('#bodycolor').css('background-color', color_hex);
+			document.getElementById("latitude").innerHTML  = localStorage.getItem("latEnd");
+			document.getElementById("longitude").innerHTML  = localStorage.getItem("lngEnd");
+			
+		});
+		$("#respond").on('click', function(){
+            if(confirm("Are you sure?")){
+                var report_id = localStorage.getItem("reportID");
+                $.ajax({
+                    type: "POST",
+                    url: "http://sosemergency2014.16mb.com/responseEmergency",
+                    data: {report_id: report_id},
+                    dataType: "JSON",
+                    success: function(data){
+
+                        window.plugins.toast.show('Succesfully Respond!', 'long', 'center');
+
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        window.plugins.toast.show('Unable to connect on server. Please check your internet connection!', 'long', 'center');
+                    }
+                });
+            }
+		});	
+	</script>
+</body> 
+</html>

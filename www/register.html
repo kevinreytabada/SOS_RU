@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">  
+
+	<style>
+		@-ms-viewport { width: 100vw ; zoom: 100% ; }                              
+		@viewport { width: 100vw ; zoom: 100% ; }
+		@-ms-viewport { user-zoom: fixed ; }                                    
+		@viewport { user-zoom: fixed ; width: }
+	</style>
+
+	<script src="https://cdn.rawgit.com/ftlabs/fastclick/master/lib/fastclick.js"></script>
+	<link rel="stylesheet" href="css/app.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/flat-ui.min.css">
+
+	<script src="intelxdk.js"></script>         
+	<script src="cordova.js"></script>          
+	<script src="xhr.js"></script>              
+
+	<script src="js/app.js"></script>
+	<script src="js/init-app.js"></script>
+	<script src="js/init-dev.js"></script>
+
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/flat-ui.min.js"></script>
+</head>
+<body style="background-color: #f2f2e8;">
+	<div class="container">
+		<div style="margin-top: 15%; margin-bottom: 25%;">
+			<div id="logo" style="text-align:center">
+	            <img src="img/icon.png" style="width:60%; margin-bottom: 5px;">
+	        </div>
+			<h5 align="center">REGISTRATION</h5>
+			<div class="form-group">
+				<input type="text" class="form-control" id="name" placeholder="Rescue Unit Name"  style= "border-radius: 0 !important;">
+				<input type="text" class="form-control" id="address" placeholder="address"  style= "border-radius: 0 !important;" required=""/>
+				<input type="text" class="form-control" id="email" placeholder="Email"  style= "border-radius: 0 !important;" required=""/>
+				<input type="text" class="form-control" id="contact_number" placeholder="Mobile"  style= "border-radius: 0 !important;" required=""/>
+				<select class="form-control" id = "type" style= "border-radius: 0 !important;" >
+					<option value="hospital">Hospital</option>
+					<option value="firecontrol">FireControl</option>
+					<option value="rescuevolunteer">Rescue Volunteer</option>
+					<option value="police">Police</option>
+				</select>
+				<input type="text" class="form-control" id="username" placeholder="Username"  style= "border-radius: 0 !important;" required=""/>
+				<input type="password" class="form-control" id="password" placeholder="Password"  style= "border-radius: 0 !important;" required=""/>
+				<input type="password" class="form-control" id="password_confirmation" placeholder="Confirm Password"  style= "border-radius: 0 !important;" required=""/>
+			</div>
+			<div class="form-group">	
+				<a class="btn btn-lg btn-block btn-danger" href="#" id="signUp" style= "border-radius: 0 !important;">Register Unit</a>
+			</div>
+		</div>
+	</div>
+<script type="text/javascript">
+	var currentLatitude, currentLongitude;
+	var getLocation = function () {
+		var suc = function (p) {
+		    if (p.coords.latitude != undefined) {
+		           	currentLatitude = p.coords.latitude;
+		            currentLongitude = p.coords.longitude;
+		     }
+		};
+		var fail = function () {
+		    getLocation();
+		};
+
+		 navigator.geolocation.getCurrentPosition(suc, fail);
+	}
+	
+	$(document).ready(function () {
+		getLocation();
+	});
+
+	$("#signUp").on('click', function(e) {
+		e.preventDefault();
+	   	getLocation();
+
+	   	console.log(currentLatitude + " = " + currentLongitude);
+
+		var name                    = $("#name").val();
+		var address                 = $("#address").val();
+		var lat                     = currentLatitude;
+		var lng                     = currentLongitude;
+		var email                   = $("#email").val();
+		var resType                 = $("#type").val();
+		var contact_number          = $("#contact_number").val();
+		var deviceID                = localStorage.getItem("deviceID");
+		var userType                = "ru";
+		var username                = $("#username").val();
+		var password                = $("#password").val();
+		var password_confirmation   = $("#password_confirmation").val();
+
+		$.post("http://sosemergency2014.16mb.com/request", {
+			name 					: name,
+			address 				: address,
+			lat 					: lat,
+			lng 					: lng,
+			email 					: email,
+			resType 				: resType ,
+			contact_number 			: contact_number,
+			deviceID 				: deviceID,
+			userType 				: userType,
+			username 				: username,
+			password 				: password,
+			password_confirmation 	: password_confirmation
+		}, function(data) {
+			console.log(data);
+			if(data.error == false) {
+				window.plugins.toast.show('Succesfully Registered Unit. Wait for the confirmation!', 'long', 'center');
+				window.location = "login.html";
+			} else {
+				var errorMessage = "";
+				$.each(data.messages, function(index, value) {
+					errorMessage += (value + "\n");
+				});
+				window.plugins.toast.show(errorMessage, 'long', 'center'); 
+			}
+		});
+	});
+</script>
+</body> 
+</html>
